@@ -1,0 +1,9 @@
+targets: cap.member.read_savings_balance@1
+tenant: tenant:cu_northlake
+patch:
+  steps:
+    s3:
+      target:
+        strategies:
+          - { kind: ax_role_name, role: button, name: "Search", match: exact }
+          - { kind: css, value: "input[type=submit]" }

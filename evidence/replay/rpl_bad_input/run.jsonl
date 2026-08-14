@@ -1,0 +1,2 @@
+{"ts": "2026-08-14T02:37:30.702057Z", "run_id": "rpl_c0fd8bfe", "seq": 1, "level": "info", "event": "run.started", "capability": "cap.member.read_savings_balance"}
+{"ts": "2026-08-14T02:37:30.702288Z", "run_id": "rpl_c0fd8bfe", "seq": 2, "level": "info", "event": "run.finished", "status": "failed", "code": "INVALID_INPUT"}

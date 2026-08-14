@@ -1,0 +1,7 @@
+{"ts": "2026-08-14T02:37:12.187121Z", "run_id": "rpl_8fba0a76", "seq": 1, "level": "info", "event": "run.started", "capability": "cap.member.read_savings_balance"}
+{"ts": "2026-08-14T02:37:12.624757Z", "run_id": "rpl_8fba0a76", "seq": 2, "level": "info", "event": "policy.evaluated", "step": "s1", "action": "click"}
+{"ts": "2026-08-14T02:37:14.192572Z", "run_id": "rpl_8fba0a76", "seq": 3, "level": "info", "event": "step.completed", "step": "s1", "action": "click", "rung_used": 1}
+{"ts": "2026-08-14T02:37:14.192754Z", "run_id": "rpl_8fba0a76", "seq": 4, "level": "info", "event": "policy.evaluated", "step": "s2", "action": "type"}
+{"ts": "2026-08-14T02:37:15.724404Z", "run_id": "rpl_8fba0a76", "seq": 5, "level": "info", "event": "step.completed", "step": "s2", "action": "type", "rung_used": 2}
+{"ts": "2026-08-14T02:37:15.724605Z", "run_id": "rpl_8fba0a76", "seq": 6, "level": "info", "event": "policy.evaluated", "step": "s3", "action": "click"}
+{"ts": "2026-08-14T02:37:17.271967Z", "run_id": "rpl_8fba0a76", "seq": 7, "level": "info", "event": "expectation.matched", "step": "s3", "code": "MEMBER_NOT_FOUND"}

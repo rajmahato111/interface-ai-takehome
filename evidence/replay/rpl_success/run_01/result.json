@@ -1,0 +1,81 @@
+{
+  "run_id": "rpl_21b5b0f6",
+  "capability": {
+    "id": "cap.member.read_savings_balance",
+    "version": 1,
+    "schema_version": "1.0.0"
+  },
+  "status": "success",
+  "started_at": "2026-08-14T02:35:44.755134Z",
+  "duration_ms": 9641,
+  "inputs_digest": "sha256:28e3df9a54fb",
+  "outputs": {
+    "savings_balance": "$4,215.60",
+    "account_status": "active"
+  },
+  "outcome": null,
+  "failure": null,
+  "steps": [
+    {
+      "id": "s1",
+      "action": "click",
+      "status": "ok",
+      "duration_ms": 1566,
+      "rung_used": 1,
+      "checkpoint": "passed",
+      "recoveries": []
+    },
+    {
+      "id": "s2",
+      "action": "type",
+      "status": "ok",
+      "duration_ms": 1527,
+      "rung_used": 2,
+      "checkpoint": "passed",
+      "recoveries": []
+    },
+    {
+      "id": "s3",
+      "action": "click",
+      "status": "ok",
+      "duration_ms": 1552,
+      "rung_used": 1,
+      "checkpoint": "passed",
+      "recoveries": []
+    },
+    {
+      "id": "s4",
+      "action": "extract",
+      "status": "ok",
+      "duration_ms": 1524,
+      "rung_used": 1,
+      "checkpoint": "passed",
+      "recoveries": []
+    },
+    {
+      "id": "s5",
+      "action": "extract",
+      "status": "ok",
+      "duration_ms": 1522,
+      "rung_used": 1,
+      "checkpoint": null,
+      "recoveries": []
+    },
+    {
+      "id": "s6",
+      "action": "finish",
+      "status": "ok",
+      "duration_ms": 1507,
+      "rung_used": null,
+      "checkpoint": null,
+      "recoveries": []
+    }
+  ],
+  "degradations": [],
+  "control": {
+    "holder": "automation",
+    "handoffs": []
+  },
+  "evidence_ref": "evidence/replay/rpl_success/run_01",
+  "escalation": null
+}

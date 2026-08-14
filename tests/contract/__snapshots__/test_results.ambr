@@ -1,0 +1,31 @@
+# serializer version: 1
+# name: test_replay_result_roundtrip
+  dict({
+    'capability': dict({
+      'id': 'cap.member.read_savings_balance',
+      'schema_version': '1.0.0',
+      'version': 1,
+    }),
+    'control': dict({
+      'handoffs': list([
+      ]),
+      'holder': 'automation',
+    }),
+    'degradations': list([
+    ]),
+    'duration_ms': 0,
+    'escalation': None,
+    'evidence_ref': None,
+    'failure': None,
+    'inputs_digest': '',
+    'outcome': None,
+    'outputs': dict({
+      'savings_balance': '$4,215.60',
+    }),
+    'run_id': 'rpl_test',
+    'started_at': '2026-08-12T09:14:19.220Z',
+    'status': 'success',
+    'steps': list([
+    ]),
+  })
+# ---

@@ -1,0 +1,34 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<title>{{ t.brand }} — Sign on</title>
+<style>
+body { margin:0; background:#c0c0c0; font-family: Tahoma, Verdana, sans-serif; font-size:12px; {{ t.css_extra }} }
+table.outer { background: {{ t.accent }}; width:100%; }
+td.banner { color:#fff; font-size:22px; font-weight:bold; padding:10px; }
+table.form { background:#e8e8e8; }
+td.lbl { text-align:right; padding:6px; }
+td.fld { padding:6px; }
+.err { color:#c00; font-weight:bold; }
+</style>
+</head>
+<body>
+<table class="outer" cellpadding="0" cellspacing="0"><tr><td class="banner">{{ t.product }}</td></tr></table>
+<table class="form" align="center" cellpadding="0" cellspacing="0" style="margin-top:40px;border:2px solid {{ t.accent }}">
+<tr><td colspan="2" style="background:{{ t.accent }};color:#fff;padding:6px">Operator Sign On — {{ t.brand }}</td></tr>
+{% if expired %}<tr><td colspan="2" class="err">Your session has expired</td></tr>{% endif %}
+{% if error %}<tr><td colspan="2" class="err">{{ error }}</td></tr>{% endif %}
+<form method="post" action="/login">
+<tr>
+  <td class="lbl">Username</td>
+  <td class="fld"><input name="username" id="{{ fid('txtUser') }}" size="24"></td>
+</tr>
+<tr>
+  <td class="lbl">Password</td>
+  <td class="fld"><input name="password" type="password" id="{{ fid('txtPass') }}" size="24"></td>
+</tr>
+<tr><td></td><td class="fld"><input type="submit" value="Sign On"></td></tr>
+</form>
+</table>
+</body>
+</html>

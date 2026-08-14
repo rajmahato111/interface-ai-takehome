@@ -1,0 +1,11 @@
+{"ts": "2026-08-14T02:37:34.240620Z", "run_id": "dsc_cafbc122", "seq": 1, "level": "info", "event": "llm.responded", "action": "click"}
+{"ts": "2026-08-14T02:37:35.804662Z", "run_id": "dsc_cafbc122", "seq": 2, "level": "info", "event": "action.dispatched", "action": "click", "ok": true}
+{"ts": "2026-08-14T02:37:38.856377Z", "run_id": "dsc_cafbc122", "seq": 3, "level": "info", "event": "llm.responded", "action": "type"}
+{"ts": "2026-08-14T02:37:40.372090Z", "run_id": "dsc_cafbc122", "seq": 4, "level": "info", "event": "action.dispatched", "action": "type", "ok": true}
+{"ts": "2026-08-14T02:37:43.423814Z", "run_id": "dsc_cafbc122", "seq": 5, "level": "info", "event": "llm.responded", "action": "click"}
+{"ts": "2026-08-14T02:37:44.970055Z", "run_id": "dsc_cafbc122", "seq": 6, "level": "info", "event": "action.dispatched", "action": "click", "ok": true}
+{"ts": "2026-08-14T02:37:48.024884Z", "run_id": "dsc_cafbc122", "seq": 7, "level": "info", "event": "llm.responded", "action": "extract"}
+{"ts": "2026-08-14T02:37:49.551108Z", "run_id": "dsc_cafbc122", "seq": 8, "level": "info", "event": "action.dispatched", "action": "extract", "ok": true}
+{"ts": "2026-08-14T02:37:52.587864Z", "run_id": "dsc_cafbc122", "seq": 9, "level": "info", "event": "llm.responded", "action": "extract"}
+{"ts": "2026-08-14T02:37:54.113919Z", "run_id": "dsc_cafbc122", "seq": 10, "level": "info", "event": "action.dispatched", "action": "extract", "ok": true}
+{"ts": "2026-08-14T02:37:57.155598Z", "run_id": "dsc_cafbc122", "seq": 11, "level": "info", "event": "llm.responded", "action": "finish"}

@@ -1,0 +1,121 @@
+schema_version: "1.0.0"
+capability:
+  id: cap.member.open_subaccount
+  version: 1
+  name: Open savings sub-account
+  description: Open a new savings sub-account for a member and reach confirmation.
+  status: approved
+  labels: [member, write]
+target:
+  surface: { kind: web, adapter: web_aria/1 }
+  app:
+    product: CoreVantage Servicing
+    product_version: "9.4"
+    tenant_scope: base
+    entry: { url_template: "{base_url}/servicing/home", requires_session: true }
+  allowlist_ref: policies/corevantage.yaml
+inputs:
+  - { name: member_id, type: string, required: true, pattern: "^[0-9]{6}$", sensitivity: identifier, example: "100234" }
+  - { name: nickname, type: string, required: true, default: "vacation", sensitivity: public }
+  - { name: amount, type: string, required: true, default: "25.00", sensitivity: public }
+  - { name: username, type: string, required: false, default: teller, sensitivity: secret }
+  - { name: password, type: string, required: false, default: teller, sensitivity: secret }
+  - { name: base_url, type: string, required: false, default: "http://127.0.0.1:8081", sensitivity: public }
+  - { name: fault, type: string, required: false, sensitivity: public }
+outputs:
+  - { name: nickname, type: string, required: false, sensitivity: public }
+outcomes:
+  - { code: VALIDATION_REJECTED, description: Server-side field error on submit. }
+policy:
+  risk_class: risky
+  side_effects: reversible
+  requires_approval_for_unattended: true
+  unattended_approver: ci
+  max_runtime_ms: 45000
+steps:
+  - id: s1
+    intent: Open member search
+    action: click
+    target:
+      frame: nav
+      strategies:
+        - { kind: ax_role_name, role: link, name: "Member Search", match: exact }
+      match_policy: require_unique
+    risk: safe
+  - id: s2
+    intent: Enter member ID
+    action: type
+    target:
+      frame: content
+      strategies:
+        - { kind: ax_label_proximity, label: "Member ID", direction: right }
+        - { kind: table_cell_neighbour, label_text: "Member ID", cell_offset: [0, 1] }
+        - { kind: css, value: "input[id$='txt1'], input[id$='srch_q']" }
+      match_policy: require_unique
+    value: { from_input: member_id }
+    risk: safe
+  - id: s3
+    intent: Find member
+    action: click
+    target:
+      frame: content
+      strategies:
+        - { kind: ax_role_name, role: button, name: "Find", match: exact }
+        - { kind: css, value: "input[type=submit]" }
+      match_policy: first
+    risk: safe
+  - id: s4
+    intent: Open the sub-account form
+    action: click
+    target:
+      frame: content
+      strategies:
+        - { kind: ax_role_name, role: link, name: "Open Sub-Account", match: exact }
+      match_policy: require_unique
+    risk: safe
+  - id: s5
+    intent: Nickname
+    action: type
+    target:
+      frame: content
+      strategies:
+        - { kind: ax_label_proximity, label: "Nickname", direction: right }
+        - { kind: table_cell_neighbour, label_text: "Nickname", cell_offset: [0, 1] }
+      match_policy: first
+    value: { from_input: nickname }
+    risk: safe
+  - id: s6
+    intent: Amount
+    action: type
+    target:
+      frame: content
+      strategies:
+        - { kind: ax_label_proximity, label: "Opening Amount", direction: right }
+        - { kind: table_cell_neighbour, label_text: "Opening Amount", cell_offset: [0, 1] }
+      match_policy: first
+    value: { from_input: amount }
+    risk: safe
+  - id: s7
+    intent: Submit the sub-account form
+    action: submit_form
+    target:
+      frame: content
+      strategies:
+        - { kind: ax_role_name, role: button, name: "Submit", match: exact }
+        - { kind: css, value: "input[type=submit]" }
+      match_policy: first
+    risk: risky
+    checkpoint:
+      kind: any_of
+      conditions:
+        - { kind: text_present, value: "Sub-account Confirmation" }
+        - { kind: text_present, value: "Product code required" }
+        - { kind: text_present, value: "All fields are required" }
+  - id: s8
+    intent: Done
+    action: finish
+    status: success
+    risk: safe
+provenance:
+  discovered_by: seed
+  compiler_version: "1.0.0"

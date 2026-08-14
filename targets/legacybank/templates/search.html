@@ -1,0 +1,55 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<style>
+body { margin:0; background:#d4d0c8; font-family: Tahoma, sans-serif; font-size:12px; {{ t.css_extra }} }
+.err { color:#c00; font-weight:bold; }
+#sysNotice { position:absolute; top:40px; left:80px; background:#ffffcc; border:2px solid #000; padding:0; }
+</style>
+</head>
+<body>
+<table width="100%" cellpadding="6"><tr><td>
+<table border="1" cellpadding="0" cellspacing="0" bgcolor="#ffffff">
+  <tr bgcolor="{{ t.accent }}"><td style="color:#fff;padding:6px">Member Search</td></tr>
+  <tr><td>
+    <form method="post" action="/member/search" name="aspnetForm">
+    <table cellpadding="6">
+      {% if t.show_name_field_first %}
+      <tr>
+        <td>Member Name</td>
+        <td><input name="{{ fid('txtName') }}" id="{{ fid('txtName') }}" size="24"></td>
+      </tr>
+      {% endif %}
+      <tr>
+        <td>Member ID</td>
+        <td><input name="{{ fid('mbrSrch_txt1') if t.id == 'a' else fid('srch_q') }}"
+                   id="{{ fid('mbrSrch_txt1') if t.id == 'a' else fid('srch_q') }}"
+                   size="12" value="{{ member_id or '' }}"></td>
+      </tr>
+      {% if not_found %}
+      <tr><td colspan="2"><span class="err">No records found</span></td></tr>
+      {% endif %}
+      <tr>
+        <td></td>
+        <td>
+          <input type="submit" value="{{ t.search_button }}">
+          {% if dupname %}
+          <input type="submit" value="{{ t.search_button }}">
+          {% endif %}
+        </td>
+      </tr>
+    </table>
+    </form>
+  </td></tr>
+</table>
+</td></tr></table>
+{% if dialog %}
+<table id="sysNotice" role="alertdialog" aria-label="System Notice">
+  <tr bgcolor="#000"><td style="color:#fff">System Notice</td></tr>
+  <tr><td>A scheduled maintenance window starts at 21:00. Acknowledge to continue.</td></tr>
+  <tr><td><button type="button" onclick="this.closest('table').remove()">OK</button>
+          <button type="button" onclick="this.closest('table').remove()">Close</button></td></tr>
+</table>
+{% endif %}
+</body>
+</html>

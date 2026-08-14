@@ -1,0 +1,8 @@
+[
+  {"action": "click", "frame": "nav", "role": "link", "name": "Member Search", "rationale": "open search"},
+  {"action": "type", "frame": "content", "role": "textbox", "name": "Member ID", "value_from_input": "member_id", "rationale": "goal member id"},
+  {"action": "click", "frame": "content", "role": "button", "name": "Find", "rationale": "submit search"},
+  {"action": "extract", "frame": "content", "label": "Savings Balance", "extract_to": "savings_balance"},
+  {"action": "extract", "frame": "content", "label": "Status", "extract_to": "account_status"},
+  {"action": "finish", "status": "success"}
+]
