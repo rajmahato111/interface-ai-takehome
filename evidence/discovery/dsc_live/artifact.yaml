@@ -1,0 +1,706 @@
+schema_version: 1.0.0
+capability:
+  id: cap.member.read_savings_balance
+  version: 1
+  name: Read member savings balance
+  description: Look up member 100234 and read their current savings balance.
+  status: approved
+  labels:
+  - member
+  - read-only
+  - balance
+target:
+  surface:
+    kind: web
+    adapter: web_aria/1
+  app:
+    product: CoreVantage Servicing
+    product_version: '9.4'
+    tenant_scope: base
+    entry:
+      url_template: '{base_url}/servicing/home'
+      requires_session: true
+  allowlist_ref: policies/corevantage.yaml
+inputs:
+- name: member_id
+  type: string
+  required: true
+  pattern: ^[0-9]{6}$
+  sensitivity: identifier
+  description:
+  example: '100234'
+  default:
+  values:
+- name: username
+  type: string
+  required: false
+  pattern:
+  sensitivity: secret
+  description:
+  example:
+  default: teller
+  values:
+- name: password
+  type: string
+  required: false
+  pattern:
+  sensitivity: secret
+  description:
+  example:
+  default: teller
+  values:
+- name: base_url
+  type: string
+  required: false
+  pattern:
+  sensitivity: public
+  description:
+  example:
+  default: http://127.0.0.1:8081
+  values:
+outputs:
+- name: savings_balance
+  type: money
+  required: true
+  source:
+    step: s4
+    extractor: ax_text
+    transform: parse_money
+  sensitivity: pii
+  values:
+- name: account_status
+  type: enum
+  required: false
+  source:
+    step: s5
+    extractor: ax_text
+    transform: lower_trim
+  sensitivity: identifier
+  values:
+  - active
+  - dormant
+  - frozen
+outcomes:
+- code: MEMBER_NOT_FOUND
+  description: No member matches the supplied ID.
+  detected_at:
+- code: PERMISSION_DENIED
+  description: Session lacks entitlement to view this member.
+  detected_at:
+policy:
+  risk_class: safe
+  side_effects: none
+  requires_approval_for_unattended: false
+  max_runtime_ms: 45000
+  unattended_approver:
+steps:
+- id: s1
+  intent: Navigate to Member Search to look up member 100234
+  action: click
+  target:
+    frame: nav
+    rationale: Accessible name 'Member Search' is more stable than generated 
+      ids.
+    strategies:
+    - kind: ax_role_name
+      role: link
+      name: Member Search
+      match: exact
+      aliases:
+      label:
+      label_text:
+      direction:
+      max_distance:
+      cell_offset:
+      value:
+      anchor_text:
+      offset:
+      requires:
+      region_anchor:
+      pattern:
+    - kind: css
+      role:
+      name:
+      match: exact
+      aliases:
+      label:
+      label_text:
+      direction:
+      max_distance:
+      cell_offset:
+      value: a:has-text('Member Search')
+      anchor_text:
+      offset:
+      requires:
+      region_anchor:
+      pattern:
+    match_policy: require_unique
+    recorded_rung: 1
+    nth: 1
+  value:
+  url_template:
+  option:
+  key:
+  extract_to:
+  condition:
+  reason:
+  context:
+  status:
+  outputs:
+  accept_names:
+  waits:
+    before:
+      kind: none
+      timeout_ms: 8000
+    after:
+      kind: none
+      timeout_ms: 8000
+  checkpoint:
+    kind: any_of
+    role:
+    name:
+    name_matches:
+    expected:
+    pattern:
+    conditions:
+    - kind: ax_present
+      role: heading
+      name:
+      name_matches: ^Member .* Detail$
+      value:
+      expected:
+      pattern:
+      conditions:
+      frame:
+    - kind: text_present
+      role:
+      name:
+      name_matches:
+      value: No records found
+      expected:
+      pattern:
+      conditions:
+      frame:
+    - kind: text_present
+      role:
+      name:
+      name_matches:
+      value: Member Search
+      expected:
+      pattern:
+      conditions:
+      frame:
+    - kind: text_present
+      role:
+      name:
+      name_matches:
+      value: Welcome
+      expected:
+      pattern:
+      conditions:
+      frame:
+    frame:
+  expectations:
+  - when:
+      kind: text_present
+      role:
+      name:
+      name_matches:
+      value: No records found
+      expected:
+      pattern:
+      conditions:
+      frame:
+    classify: business_outcome
+    outcome: MEMBER_NOT_FOUND
+    code:
+    halt: true
+    recovery:
+    max_attempts: 2
+  risk: safe
+  timeout_ms: 8000
+  retry:
+    attempts: 0
+    backoff_ms: 400
+    on: []
+- id: s2
+  intent: Enter the member ID to search for
+  action: type
+  target:
+    frame: content
+    rationale: Accessible name 'Member ID' is more stable than generated ids.
+    strategies:
+    - kind: ax_role_name
+      role: textbox
+      name: Member ID
+      match: exact
+      aliases:
+      label:
+      label_text:
+      direction:
+      max_distance:
+      cell_offset:
+      value:
+      anchor_text:
+      offset:
+      requires:
+      region_anchor:
+      pattern:
+    - kind: ax_label_proximity
+      role:
+      name:
+      match: exact
+      aliases:
+      label: Member ID
+      label_text:
+      direction: right
+      max_distance: 2
+      cell_offset:
+      value:
+      anchor_text:
+      offset:
+      requires:
+      region_anchor:
+      pattern:
+    - kind: table_cell_neighbour
+      role:
+      name:
+      match: exact
+      aliases:
+      label:
+      label_text: Member ID
+      direction:
+      max_distance:
+      cell_offset:
+      - 0
+      - 1
+      value:
+      anchor_text:
+      offset:
+      requires:
+      region_anchor:
+      pattern:
+    - kind: css
+      role:
+      name:
+      match: exact
+      aliases:
+      label:
+      label_text:
+      direction:
+      max_distance:
+      cell_offset:
+      value: input[id$='txt1'], input[id$='srch_q']
+      anchor_text:
+      offset:
+      requires:
+      region_anchor:
+      pattern:
+    match_policy: require_unique
+    recorded_rung: 2
+    nth: 1
+  value:
+    from_input: member_id
+    literal:
+    default:
+  url_template:
+  option:
+  key:
+  extract_to:
+  condition:
+  reason:
+  context:
+  status:
+  outputs:
+  accept_names:
+  waits:
+    before:
+      kind: none
+      timeout_ms: 8000
+    after:
+      kind: none
+      timeout_ms: 8000
+  checkpoint:
+  expectations: []
+  risk: safe
+  timeout_ms: 8000
+  retry:
+    attempts: 0
+    backoff_ms: 400
+    on: []
+- id: s3
+  intent: Member ID is already populated; clicking Find to look up the member.
+  action: click
+  target:
+    frame: content
+    rationale: Accessible name 'Find' is more stable than generated ids.
+    strategies:
+    - kind: ax_role_name
+      role: button
+      name: Find
+      match: exact
+      aliases:
+      label:
+      label_text:
+      direction:
+      max_distance:
+      cell_offset:
+      value:
+      anchor_text:
+      offset:
+      requires:
+      region_anchor:
+      pattern:
+    - kind: css
+      role:
+      name:
+      match: exact
+      aliases:
+      label:
+      label_text:
+      direction:
+      max_distance:
+      cell_offset:
+      value: input[type=submit][value='Find']
+      anchor_text:
+      offset:
+      requires:
+      region_anchor:
+      pattern:
+    - kind: css
+      role:
+      name:
+      match: exact
+      aliases:
+      label:
+      label_text:
+      direction:
+      max_distance:
+      cell_offset:
+      value: input[type=submit]
+      anchor_text:
+      offset:
+      requires:
+      region_anchor:
+      pattern:
+    match_policy: require_unique
+    recorded_rung: 1
+    nth: 1
+  value:
+  url_template:
+  option:
+  key:
+  extract_to:
+  condition:
+  reason:
+  context:
+  status:
+  outputs:
+  accept_names:
+  waits:
+    before:
+      kind: none
+      timeout_ms: 8000
+    after:
+      kind: none
+      timeout_ms: 8000
+  checkpoint:
+    kind: any_of
+    role:
+    name:
+    name_matches:
+    expected:
+    pattern:
+    conditions:
+    - kind: ax_present
+      role: heading
+      name:
+      name_matches: ^Member .* Detail$
+      value:
+      expected:
+      pattern:
+      conditions:
+      frame:
+    - kind: text_present
+      role:
+      name:
+      name_matches:
+      value: No records found
+      expected:
+      pattern:
+      conditions:
+      frame:
+    - kind: text_present
+      role:
+      name:
+      name_matches:
+      value: Member Search
+      expected:
+      pattern:
+      conditions:
+      frame:
+    - kind: text_present
+      role:
+      name:
+      name_matches:
+      value: Welcome
+      expected:
+      pattern:
+      conditions:
+      frame:
+    frame:
+  expectations:
+  - when:
+      kind: text_present
+      role:
+      name:
+      name_matches:
+      value: No records found
+      expected:
+      pattern:
+      conditions:
+      frame:
+    classify: business_outcome
+    outcome: MEMBER_NOT_FOUND
+    code:
+    halt: true
+    recovery:
+    max_attempts: 2
+  risk: safe
+  timeout_ms: 8000
+  retry:
+    attempts: 0
+    backoff_ms: 400
+    on: []
+- id: s4
+  intent: extract
+  action: extract
+  target:
+    frame: content
+    rationale: Accessible name 'Savings Balance' is more stable than generated 
+      ids.
+    strategies:
+    - kind: ax_label_proximity
+      role:
+      name:
+      match: exact
+      aliases:
+      label: Savings Balance
+      label_text:
+      direction: right
+      max_distance: 2
+      cell_offset:
+      value:
+      anchor_text:
+      offset:
+      requires:
+      region_anchor:
+      pattern:
+    - kind: table_cell_neighbour
+      role:
+      name:
+      match: exact
+      aliases:
+      label:
+      label_text: Savings Balance
+      direction:
+      max_distance:
+      cell_offset:
+      - 0
+      - 1
+      value:
+      anchor_text:
+      offset:
+      requires:
+      region_anchor:
+      pattern:
+    - kind: regex_in_region
+      role:
+      name:
+      match: exact
+      aliases:
+      label:
+      label_text:
+      direction:
+      max_distance:
+      cell_offset:
+      value:
+      anchor_text:
+      offset:
+      requires:
+      region_anchor: Savings
+      pattern: \$[0-9,]+\.[0-9]{2}
+    match_policy: first
+    recorded_rung: 1
+    nth: 1
+  value:
+  url_template:
+  option:
+  key:
+  extract_to: savings_balance
+  condition:
+  reason:
+  context:
+  status:
+  outputs:
+  accept_names:
+  waits:
+    before:
+      kind: none
+      timeout_ms: 8000
+    after:
+      kind: none
+      timeout_ms: 8000
+  checkpoint:
+    kind: matches
+    role:
+    name:
+    name_matches:
+    expected:
+    pattern: \$[0-9,]+\.[0-9]{2}
+    conditions:
+    frame:
+  expectations: []
+  risk: safe
+  timeout_ms: 8000
+  retry:
+    attempts: 0
+    backoff_ms: 400
+    on: []
+- id: s5
+  intent: extract
+  action: extract
+  target:
+    frame: content
+    rationale: Accessible name 'Status' is more stable than generated ids.
+    strategies:
+    - kind: ax_label_proximity
+      role:
+      name:
+      match: exact
+      aliases:
+      label: Status
+      label_text:
+      direction: right
+      max_distance: 2
+      cell_offset:
+      value:
+      anchor_text:
+      offset:
+      requires:
+      region_anchor:
+      pattern:
+    - kind: table_cell_neighbour
+      role:
+      name:
+      match: exact
+      aliases:
+      label:
+      label_text: Status
+      direction:
+      max_distance:
+      cell_offset:
+      - 0
+      - 1
+      value:
+      anchor_text:
+      offset:
+      requires:
+      region_anchor:
+      pattern:
+    - kind: regex_in_region
+      role:
+      name:
+      match: exact
+      aliases:
+      label:
+      label_text:
+      direction:
+      max_distance:
+      cell_offset:
+      value:
+      anchor_text:
+      offset:
+      requires:
+      region_anchor: Status
+      pattern: \$[0-9,]+\.[0-9]{2}
+    match_policy: first
+    recorded_rung: 1
+    nth: 1
+  value:
+  url_template:
+  option:
+  key:
+  extract_to: account_status
+  condition:
+  reason:
+  context:
+  status:
+  outputs:
+  accept_names:
+  waits:
+    before:
+      kind: none
+      timeout_ms: 8000
+    after:
+      kind: none
+      timeout_ms: 8000
+  checkpoint:
+    kind: ax_present
+    role:
+    name:
+    name_matches: .
+    expected:
+    pattern:
+    conditions:
+    frame:
+  expectations: []
+  risk: safe
+  timeout_ms: 8000
+  retry:
+    attempts: 0
+    backoff_ms: 400
+    on: []
+- id: s6
+  intent: finish
+  action: finish
+  target:
+  value:
+  url_template:
+  option:
+  key:
+  extract_to:
+  condition:
+  reason:
+  context:
+  status: success
+  outputs:
+  accept_names:
+  waits:
+    before:
+      kind: none
+      timeout_ms: 8000
+    after:
+      kind: none
+      timeout_ms: 8000
+  checkpoint:
+  expectations: []
+  risk: safe
+  timeout_ms: 8000
+  retry:
+    attempts: 0
+    backoff_ms: 400
+    on: []
+reliability:
+  replays: 0
+  successes: 0
+  last_verified_at:
+  stability_score: 0.0
+  locator_degradations: []
+provenance:
+  discovered_by: claude-sonnet
+  discovery_run_id: dsc_552ee68f
+  discovered_at: '2026-08-14T03:30:45Z'
+  compiler_version: 1.0.0
+  evidence_ref:
+  human_edits: []

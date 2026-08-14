@@ -1,0 +1,49 @@
+[
+  {
+    "request": {
+      "user": "GOAL: Look up member 100234 and read their current savings balance.\nURL: http://127.0.0.1:8081/servicing/home\nSTEPS_LEFT: 24\nAX:\n[{'role': 'a', 'name': 'Home', 'value': ''}, {'role': 'a', 'name': 'Home', 'value': ''}, {'role': 'a', 'name': 'Member Search', 'value': ''}, {'role': 'a', 'name': 'Member Search', 'value': ''}, {'role': 'a', 'name': 'New Sub-Account', 'value': ''}, {'role': 'a', 'name': 'New Sub-Account', 'value': ''}, {'role': 'a', 'name': 'Sign Off', 'value': ''}, {'role': 'a', 'name': 'Sign Off', 'value': ''}]\nVISIBLE TEXT (truncated):\nSummit Credit Union\tHome\tMember Search\tNew Sub-Account\tSign Off\nWelcome \u2014 Summit Credit Union\nUse Member Search in the navigation bar to look up a member.\nCall exactly one tool. If ALREADY_EXTRACTED covers the goal, call finish. If the member ID is already filled, click Find."
+    },
+    "response": {
+      "action": "click",
+      "role": "a",
+      "name": "Member Search",
+      "rationale": "Navigate to Member Search to look up member 100234"
+    }
+  },
+  {
+    "request": {
+      "user": "GOAL: Look up member 100234 and read their current savings balance.\nURL: http://127.0.0.1:8081/servicing/home\nSTEPS_LEFT: 23\nRECENT: ['click ok=True extracted=None']\nAX:\n[{'role': 'input', 'name': 'Find', 'value': 'Find'}, {'role': 'input', 'name': 'Find', 'value': 'Find'}, {'role': 'input', 'name': '', 'value': ''}, {'role': 'input', 'name': '', 'value': ''}, {'role': 'a', 'name': 'Home', 'value': ''}, {'role': 'a', 'name': 'Home', 'value': ''}, {'role': 'a', 'name': 'Member Search', 'value': ''}, {'role': 'a', 'name': 'Member Search', 'value': ''}, {'role': 'a', 'name': 'New Sub-Account', 'value': ''}, {'role': 'a', 'name': 'New Sub-Account', 'value': ''}, {'role': 'a', 'name': 'Sign Off', 'value': ''}, {'role': 'a', 'name': 'Sign Off', 'value': ''}]\nVISIBLE TEXT (truncated):\nSummit Credit Union\tHome\tMember Search\tNew Sub-Account\tSign Off\nMember Search\n\nMember ID\t\n\t\nFind\nCall exactly one tool. If ALREADY_EXTRACTED covers the goal, call finish. If the member ID is already filled, click Find."
+    },
+    "response": {
+      "action": "type",
+      "role": "input",
+      "name": "",
+      "value_from_input": "100234",
+      "rationale": "Enter the member ID to search for"
+    }
+  },
+  {
+    "request": {
+      "user": "GOAL: Look up member 100234 and read their current savings balance.\nURL: http://127.0.0.1:8081/servicing/home\nSTEPS_LEFT: 22\nRECENT: ['click ok=True extracted=None', 'type ok=True extracted=None']\nAX:\n[{'role': 'input', 'name': '100234', 'value': '100234'}, {'role': 'input', 'name': '100234', 'value': '100234'}, {'role': 'input', 'name': 'Find', 'value': 'Find'}, {'role': 'input', 'name': 'Find', 'value': 'Find'}, {'role': 'a', 'name': 'Home', 'value': ''}, {'role': 'a', 'name': 'Home', 'value': ''}, {'role': 'a', 'name': 'Member Search', 'value': ''}, {'role': 'a', 'name': 'Member Search', 'value': ''}, {'role': 'a', 'name': 'New Sub-Account', 'value': ''}, {'role': 'a', 'name': 'New Sub-Account', 'value': ''}, {'role': 'a', 'name': 'Sign Off', 'value': ''}, {'role': 'a', 'name': 'Sign Off', 'value': ''}]\nVISIBLE TEXT (truncated):\nSummit Credit Union\tHome\tMember Search\tNew Sub-Account\tSign Off\nMember Search\n\nMember ID\t\n\t\n100234\nFind\nCall exactly one tool. If ALREADY_EXTRACTED covers the goal, call finish. If the member ID is already filled, click Find."
+    },
+    "response": {
+      "action": "click",
+      "role": "input",
+      "name": "Find",
+      "rationale": "Member ID is already populated; clicking Find to look up the member."
+    }
+  },
+  {
+    "request": {
+      "user": "GOAL: Look up member 100234 and read their current savings balance.\nURL: http://127.0.0.1:8081/servicing/home\nSTEPS_LEFT: 21\nRECENT: ['click ok=True extracted=None', 'type ok=True extracted=None', 'click ok=True extracted=None']\nAX:\n[{'role': 'a', 'name': 'Home', 'value': ''}, {'role': 'a', 'name': 'Home', 'value': ''}, {'role': 'a', 'name': 'Member Search', 'value': ''}, {'role': 'a', 'name': 'Member Search', 'value': ''}, {'role': 'a', 'name': 'New Sub-Account', 'value': ''}, {'role': 'a', 'name': 'New Sub-Account', 'value': ''}, {'role': 'a', 'name': 'Sign Off', 'value': ''}, {'role': 'a', 'name': 'Sign Off', 'value': ''}, {'role': 'h1', 'name': 'Member 100234 Detail', 'value': ''}, {'role': 'h1', 'name': 'Member 100234 Detail', 'value': ''}, {'role': 'a', 'name': 'Open Sub-Account', 'value': ''}, {'role': 'a', 'name': 'Open Sub-Account', 'value': ''}]\nVISIBLE TEXT (truncated):\nSummit Credit Union\tHome\tMember Search\tNew Sub-Account\tSign Off\nMember 100234 Detail\n\nName\tJane Doe\nStatus\tactive\nSavings Balance\t$4,215.60\nChecking Balance\t$812.04\nTax ID\t\u2022\u2022\u2022-\u2022\u2022-4412\nOpen Sub-Account\nCall exactly one tool. If ALREADY_EXTRACTED covers the goal, call finish. If the member ID is already filled, click Find."
+    },
+    "response": {
+      "action": "finish",
+      "outputs": {
+        "member_id": "100234",
+        "savings_balance": "$4,215.60"
+      },
+      "status": "success"
+    }
+  }
+]

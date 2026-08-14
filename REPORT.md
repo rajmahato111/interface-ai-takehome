@@ -33,3 +33,7 @@ Allowlist is a pre-flight gate on every action in both engines; post-navigation 
 | Queues / Redis / catalog API | Brief penalises scaling infra | Executor as worker, lease in Redis |
 | Credential vault | We never type secrets on expiry | Broker logs in, agent inherits session |
 | Auto-promote human steps | Unreviewed edits to approved capabilities | Overlay PR with review |
+
+## 8. Live evidence
+
+`evidence/discovery/dsc_live/` is a real Claude Sonnet 4.6 discovery against tenant A (`GOAL_REACHED`). The compiled artifact auto-replayed in a subprocess and returned `$4,215.60` / `active`. CI still uses `tests/fixtures/cassettes/read_savings.json` and does not need an API key.

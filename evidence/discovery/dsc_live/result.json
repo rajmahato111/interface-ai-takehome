@@ -1,0 +1,14 @@
+{
+  "stop_reason": "GOAL_REACHED",
+  "run_id": "dsc_552ee68f",
+  "auto_replay": {
+    "returncode": 0,
+    "status": "success",
+    "outputs": {
+      "savings_balance": "$4,215.60",
+      "account_status": "active"
+    },
+    "failure": null,
+    "run_id": "rpl_2330a058"
+  }
+}
