@@ -20,8 +20,9 @@ def test_cassette_discover_then_replay(bank_a: str, tmp_path: Path) -> None:
         evidence_dir=tmp_path / "rpl",
         persist_outputs=True,
     )
-    assert result.status in {"success", "business_outcome", "failed"}
-    # cassette path is the real loop; compiled artifact must at least validate and run
+    assert result.status == "success"
+    assert result.outputs["savings_balance"] == "$4,215.60"
+    assert result.outputs.get("account_status") == "active"
     assert result.capability["id"] == "cap.member.read_savings_balance"
 
 

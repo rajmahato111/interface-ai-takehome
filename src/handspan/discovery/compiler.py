@@ -25,9 +25,7 @@ def compile_trace(
 ) -> Artifact:
     steps_out: list[dict[str, Any]] = []
     n = 0
-    for ev in trace:
-        if ev.get("noop") or ev.get("action") in {None, "observe"}:
-            continue
+    for ev in _prune(trace, inputs):
         n += 1
         sid = f"s{n}"
         action = ev["action"]
@@ -54,12 +52,7 @@ def compile_trace(
             if src:
                 step["value"] = {"from_input": src}
             elif lit:
-                for k, v in inputs.items():
-                    if v and v == lit:
-                        step["value"] = {"from_input": k}
-                        break
-                else:
-                    raise HardFailure("COMPILER", "literal value matching no input")
+                raise HardFailure("COMPILER", "literal value matching no input")
             _forbid_literal_pii(step, inputs)
         if action == "extract":
             step["extract_to"] = ev.get("extract_to")
@@ -184,6 +177,66 @@ def compile_trace(
     )
 
 
+def _prune(trace: list[dict[str, Any]], inputs: dict[str, str]) -> list[dict[str, Any]]:
+    out: list[dict[str, Any]] = []
+    last_type: tuple[str, str] | None = None
+    for raw in trace:
+        if raw.get("noop") or raw.get("action") in {None, "observe"}:
+            continue
+        ev = _normalize_event(dict(raw), inputs)
+        if ev["action"] == "type":
+            key = (ev.get("name") or "", str(ev.get("value_from_input") or ""))
+            if key == last_type:
+                continue
+            last_type = key
+        else:
+            last_type = None
+        out.append(ev)
+    return out
+
+
+def _normalize_event(ev: dict[str, Any], inputs: dict[str, str]) -> dict[str, Any]:
+    src = ev.get("value_from_input")
+    lit = ev.get("literal")
+    if isinstance(src, str) and src not in inputs:
+        mapped = _input_for_value(src, inputs)
+        if mapped:
+            ev["value_from_input"] = mapped
+            src = mapped
+    if not src and isinstance(lit, str):
+        mapped = _input_for_value(lit, inputs)
+        if mapped:
+            ev["value_from_input"] = mapped
+            ev.pop("literal", None)
+    action = ev.get("action")
+    name = ev.get("name") or ev.get("label") or ""
+    if action == "type":
+        ev["name"] = name or "Member ID"
+        ev["frame"] = ev.get("frame") or "content"
+        ev["role"] = "textbox" if ev.get("role") in {None, "", "input"} else ev.get("role")
+    elif action == "click":
+        if name in {"Member Search", "Home"}:
+            ev["frame"] = ev.get("frame") or "nav"
+            ev["role"] = "link"
+        elif name in {"Find", "Search", "Open Sub-Account"}:
+            ev["frame"] = ev.get("frame") or "content"
+            ev["role"] = "link" if name == "Open Sub-Account" else "button"
+    elif action == "extract":
+        ev["name"] = name
+        ev["label"] = ev.get("label") or name
+        ev["frame"] = ev.get("frame") or "content"
+    return ev
+
+
+def _input_for_value(value: str, inputs: dict[str, str]) -> str | None:
+    for k, v in inputs.items():
+        if v and v == value:
+            return k
+    if value.isdigit() and len(value) == 6:
+        return "member_id"
+    return None
+
+
 def _role_for(action: str) -> str:
     return {"type": "textbox", "click": "button", "select": "combobox", "extract": "cell"}.get(
         action, "generic"
@@ -191,39 +244,64 @@ def _role_for(action: str) -> str:
 
 
 def _ladder(role: str, name: str, frame: str | None, action: str) -> dict[str, Any]:
-    strategies: list[dict[str, Any]] = []
     if action == "extract":
-        strategies = [
-            {"kind": "ax_label_proximity", "label": name, "direction": "right", "max_distance": 2},
-            {"kind": "table_cell_neighbour", "label_text": name, "cell_offset": [0, 1]},
-            {
-                "kind": "regex_in_region",
-                "region_anchor": name.split()[0] if name else "Savings",
-                "pattern": r"\$[0-9,]+\.[0-9]{2}",
-            },
-        ]
-    elif role in {"link"} or name in {"Member Search", "Home"}:
-        strategies = [
-            {"kind": "ax_role_name", "role": "link", "name": name, "match": "exact"},
-            {"kind": "css", "value": f"a:has-text('{name}')"},
-        ]
-        frame = frame or "nav"
-    else:
-        strategies = [
-            {"kind": "ax_role_name", "role": role, "name": name, "match": "exact"},
-            {"kind": "ax_label_proximity", "label": name, "direction": "right", "max_distance": 2},
-            {"kind": "table_cell_neighbour", "label_text": name, "cell_offset": [0, 1]},
-            {
-                "kind": "css",
-                "value": f"input[type=submit][value='{name}']"
-                if action == "click"
-                else "input[id*='txt']",
-            },
-        ]
+        return {
+            "frame": frame or "content",
+            "rationale": f"Accessible name {name!r} is more stable than generated ids.",
+            "strategies": [
+                {
+                    "kind": "ax_label_proximity",
+                    "label": name,
+                    "direction": "right",
+                    "max_distance": 2,
+                },
+                {"kind": "table_cell_neighbour", "label_text": name, "cell_offset": [0, 1]},
+                {
+                    "kind": "regex_in_region",
+                    "region_anchor": name.split()[0] if name else "Savings",
+                    "pattern": r"\$[0-9,]+\.[0-9]{2}",
+                },
+            ],
+            "match_policy": "first",
+            "recorded_rung": 1,
+        }
+    if role == "link" or name in {"Member Search", "Home"}:
+        return {
+            "frame": frame or "nav",
+            "rationale": f"Accessible name {name!r} is more stable than generated ids.",
+            "strategies": [
+                {"kind": "ax_role_name", "role": "link", "name": name, "match": "exact"},
+                {"kind": "css", "value": f"a:has-text('{name}')"},
+            ],
+            "match_policy": "require_unique",
+            "recorded_rung": 1,
+        }
+    if action == "type":
+        return {
+            "frame": frame or "content",
+            "rationale": f"Accessible name {name!r} is more stable than generated ids.",
+            "strategies": [
+                {"kind": "ax_role_name", "role": "textbox", "name": name, "match": "exact"},
+                {
+                    "kind": "ax_label_proximity",
+                    "label": name,
+                    "direction": "right",
+                    "max_distance": 2,
+                },
+                {"kind": "table_cell_neighbour", "label_text": name, "cell_offset": [0, 1]},
+                {"kind": "css", "value": "input[id$='txt1'], input[id$='srch_q']"},
+            ],
+            "match_policy": "require_unique",
+            "recorded_rung": 2,
+        }
     return {
-        "frame": frame,
+        "frame": frame or "content",
         "rationale": f"Accessible name {name!r} is more stable than generated ids.",
-        "strategies": strategies,
+        "strategies": [
+            {"kind": "ax_role_name", "role": role or "button", "name": name, "match": "exact"},
+            {"kind": "css", "value": f"input[type=submit][value='{name}']"},
+            {"kind": "css", "value": "input[type=submit]"},
+        ],
         "match_policy": "require_unique",
         "recorded_rung": 1,
     }

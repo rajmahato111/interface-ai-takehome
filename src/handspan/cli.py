@@ -26,10 +26,18 @@ def discover(
     cassette: Path | None = typer.Option(None),
     live: bool = typer.Option(False),
     headed: bool = typer.Option(False),
+    evidence_dir: Path | None = typer.Option(None),
 ) -> None:
     from handspan.discovery.agent import discover as run
 
-    dest = run(goal, target, cassette_path=cassette, live=live, headless=not headed)
+    dest = run(
+        goal,
+        target,
+        cassette_path=cassette,
+        live=live,
+        headless=not headed,
+        evidence_dir=evidence_dir,
+    )
     print(f"artifact: {dest}")
 
 

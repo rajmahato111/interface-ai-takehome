@@ -35,7 +35,11 @@ discover:
 	$(PYTHON) -m handspan discover --cassette tests/fixtures/cassettes/read_savings.json --goal "Look up member 100234 and read their current savings balance." --target http://127.0.0.1:8081/servicing/home
 
 discover-live:
-	$(PYTHON) -m handspan discover --live --goal "Look up member 100234 and read their current savings balance." --target http://127.0.0.1:8081/servicing/home
+	$(PYTHON) -m handspan discover --live \
+		--cassette evidence/discovery/dsc_live/cassette.json \
+		--evidence-dir evidence/discovery/dsc_live \
+		--goal "Look up member 100234 and read their current savings balance." \
+		--target http://127.0.0.1:8081/servicing/home
 
 replay:
 	$(PYTHON) -m handspan replay --artifact evidence/artifacts/cap.member.read_savings_balance.yaml --input member_id=100234
