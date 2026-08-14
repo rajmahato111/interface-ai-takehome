@@ -1,0 +1,3 @@
+{"ts": "2026-08-14T02:37:28.581235Z", "run_id": "rpl_088d6a73", "seq": 1, "level": "info", "event": "run.started", "capability": "cap.member.read_savings_balance"}
+{"ts": "2026-08-14T02:37:29.045176Z", "run_id": "rpl_088d6a73", "seq": 2, "level": "info", "event": "policy.evaluated", "step": "s1", "action": "click"}
+{"ts": "2026-08-14T02:37:30.648194Z", "run_id": "rpl_088d6a73", "seq": 3, "level": "info", "event": "run.finished", "status": "failed", "code": "SESSION_EXPIRED", "step": "s1"}

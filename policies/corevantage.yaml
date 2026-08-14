@@ -1,0 +1,15 @@
+version: 1
+domains: ["localhost", "127.0.0.1", "localhost:8081", "127.0.0.1:8081", "localhost:8082", "127.0.0.1:8082"]
+routes:
+  allow: ["/servicing/**", "/member/**", "/subaccount/**", "/login", "/logout"]
+  deny:  ["/admin/**", "/export/**", "/wire/**", "/user-management/**"]
+actions:
+  allow: [navigate, click, type, select, press_key, wait_for, extract, assert, submit_form, confirm_dialog, finish, escalate]
+  deny:  [file_download, file_upload, execute_script, open_new_window]
+risky_actions:
+  submit_form: { when_side_effects: [reversible, irreversible] }
+  confirm_dialog: always
+data:
+  forbid_typing_into: ["role=textbox name~=(SSN|Social Security|Tax ID)"]
+  max_extractions_per_run: 20
+limits: { max_steps: 25, max_runtime_ms: 180000 }

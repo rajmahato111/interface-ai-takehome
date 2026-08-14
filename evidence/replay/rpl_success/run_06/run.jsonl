@@ -1,0 +1,14 @@
+{"ts": "2026-08-14T02:36:33.324037Z", "run_id": "rpl_4ce08597", "seq": 1, "level": "info", "event": "run.started", "capability": "cap.member.read_savings_balance"}
+{"ts": "2026-08-14T02:36:33.793401Z", "run_id": "rpl_4ce08597", "seq": 2, "level": "info", "event": "policy.evaluated", "step": "s1", "action": "click"}
+{"ts": "2026-08-14T02:36:35.356948Z", "run_id": "rpl_4ce08597", "seq": 3, "level": "info", "event": "step.completed", "step": "s1", "action": "click", "rung_used": 1}
+{"ts": "2026-08-14T02:36:35.357109Z", "run_id": "rpl_4ce08597", "seq": 4, "level": "info", "event": "policy.evaluated", "step": "s2", "action": "type"}
+{"ts": "2026-08-14T02:36:36.886349Z", "run_id": "rpl_4ce08597", "seq": 5, "level": "info", "event": "step.completed", "step": "s2", "action": "type", "rung_used": 2}
+{"ts": "2026-08-14T02:36:36.886512Z", "run_id": "rpl_4ce08597", "seq": 6, "level": "info", "event": "policy.evaluated", "step": "s3", "action": "click"}
+{"ts": "2026-08-14T02:36:38.440494Z", "run_id": "rpl_4ce08597", "seq": 7, "level": "info", "event": "step.completed", "step": "s3", "action": "click", "rung_used": 1}
+{"ts": "2026-08-14T02:36:38.440653Z", "run_id": "rpl_4ce08597", "seq": 8, "level": "info", "event": "policy.evaluated", "step": "s4", "action": "extract"}
+{"ts": "2026-08-14T02:36:39.965749Z", "run_id": "rpl_4ce08597", "seq": 9, "level": "info", "event": "step.completed", "step": "s4", "action": "extract", "rung_used": 1}
+{"ts": "2026-08-14T02:36:39.965910Z", "run_id": "rpl_4ce08597", "seq": 10, "level": "info", "event": "policy.evaluated", "step": "s5", "action": "extract"}
+{"ts": "2026-08-14T02:36:41.492350Z", "run_id": "rpl_4ce08597", "seq": 11, "level": "info", "event": "step.completed", "step": "s5", "action": "extract", "rung_used": 1}
+{"ts": "2026-08-14T02:36:41.492496Z", "run_id": "rpl_4ce08597", "seq": 12, "level": "info", "event": "policy.evaluated", "step": "s6", "action": "finish"}
+{"ts": "2026-08-14T02:36:42.999626Z", "run_id": "rpl_4ce08597", "seq": 13, "level": "info", "event": "step.completed", "step": "s6", "action": "finish", "rung_used": null}
+{"ts": "2026-08-14T02:36:42.999692Z", "run_id": "rpl_4ce08597", "seq": 14, "level": "info", "event": "run.finished", "status": "success"}

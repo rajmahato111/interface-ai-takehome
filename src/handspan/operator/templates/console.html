@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Handspan operator (mock UI, real session)</title>
+<style>
+body { margin: 0; font-family: Georgia, serif; background: #1c1914; color: #f3ead8; }
+header { padding: 16px 24px; background: #2a241c; }
+img { display: block; width: 100%; max-width: 1100px; cursor: crosshair; background: #000; }
+form { padding: 12px 24px; display: flex; gap: 8px; }
+input, button { font: inherit; padding: 6px 10px; }
+.note { padding: 0 24px 16px; color: #cbb994; max-width: 60ch; }
+</style>
+</head>
+<body>
+<header>
+  <strong>Operator console</strong> — session {{ session_id }} — lease {{ lease }}
+  <p class="note">Mocked UI, real seam: clicks and keystrokes go to the same Playwright page the robot paused. Hand back returns the lease.</p>
+</header>
+<img id="shot" src="/operator/{{ session_id }}/shot" alt="live session">
+<form method="post" action="/operator/{{ session_id }}/type">
+  <input name="text" placeholder="type into focused field" autocomplete="off">
+  <button>Type</button>
+</form>
+<form method="post" action="/operator/{{ session_id }}/release">
+  <button>Hand back</button>
+</form>
+<script>
+const img = document.getElementById('shot');
+setInterval(() => { img.src = '/operator/{{ session_id }}/shot?' + Date.now(); }, 500);
+img.addEventListener('click', ev => {
+  const r = img.getBoundingClientRect();
+  fetch('/operator/{{ session_id }}/click', {
+    method: 'POST',
+    headers: {'Content-Type': 'application/json'},
+    body: JSON.stringify({x: ev.clientX - r.left, y: ev.clientY - r.top, w: r.width, h: r.height})
+  });
+});
+</script>
+</body>
+</html>

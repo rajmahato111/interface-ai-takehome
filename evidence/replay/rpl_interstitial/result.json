@@ -1,0 +1,86 @@
+{
+  "run_id": "rpl_8b589216",
+  "capability": {
+    "id": "cap.member.read_savings_balance",
+    "version": 1,
+    "schema_version": "1.0.0"
+  },
+  "status": "success",
+  "started_at": "2026-08-14T02:37:17.331218Z",
+  "duration_ms": 11184,
+  "inputs_digest": "sha256:0d61763f95a5",
+  "outputs": {
+    "savings_balance": "$4,215.60",
+    "account_status": "active"
+  },
+  "outcome": null,
+  "failure": null,
+  "steps": [
+    {
+      "id": "s1",
+      "action": "click",
+      "status": "ok",
+      "duration_ms": 3101,
+      "rung_used": 1,
+      "checkpoint": "passed",
+      "recoveries": [
+        {
+          "code": "KNOWN_INTERSTITIAL",
+          "attempts": 1
+        }
+      ]
+    },
+    {
+      "id": "s2",
+      "action": "type",
+      "status": "ok",
+      "duration_ms": 1528,
+      "rung_used": 2,
+      "checkpoint": "passed",
+      "recoveries": []
+    },
+    {
+      "id": "s3",
+      "action": "click",
+      "status": "ok",
+      "duration_ms": 1531,
+      "rung_used": 1,
+      "checkpoint": "passed",
+      "recoveries": []
+    },
+    {
+      "id": "s4",
+      "action": "extract",
+      "status": "ok",
+      "duration_ms": 1522,
+      "rung_used": 1,
+      "checkpoint": "passed",
+      "recoveries": []
+    },
+    {
+      "id": "s5",
+      "action": "extract",
+      "status": "ok",
+      "duration_ms": 1529,
+      "rung_used": 1,
+      "checkpoint": null,
+      "recoveries": []
+    },
+    {
+      "id": "s6",
+      "action": "finish",
+      "status": "ok",
+      "duration_ms": 1509,
+      "rung_used": null,
+      "checkpoint": null,
+      "recoveries": []
+    }
+  ],
+  "degradations": [],
+  "control": {
+    "holder": "automation",
+    "handoffs": []
+  },
+  "evidence_ref": "evidence/replay/rpl_interstitial",
+  "escalation": null
+}

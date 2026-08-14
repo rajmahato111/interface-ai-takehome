@@ -1,0 +1,25 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<style>
+body { margin:0; background:#d4d0c8; font-family: Tahoma, sans-serif; font-size:12px; {{ t.css_extra }} }
+</style>
+</head>
+<body>
+<table width="100%" cellpadding="6"><tr><td>
+<table border="1" cellpadding="6" bgcolor="#ffffff" width="70%">
+  <tr bgcolor="{{ t.accent }}"><td colspan="2" style="color:#fff">
+    <h1 style="font-size:16px;margin:0">Member {{ member_id }} Detail</h1>
+  </td></tr>
+  <tr><td>Name</td><td>{{ rec.name }}</td></tr>
+  <tr><td>Status</td><td>{{ rec.status }}</td></tr>
+  <tr><td>Savings Balance</td><td>{{ rec.savings_balance }}</td></tr>
+  <tr><td>Checking Balance</td><td>{{ rec.checking_balance }}</td></tr>
+  <tr><td>Tax ID</td><td>{{ rec.ssn_display }}</td></tr>
+  <tr><td colspan="2">
+    <a href="/subaccount/new?member_id={{ member_id }}">Open Sub-Account</a>
+  </td></tr>
+</table>
+</td></tr></table>
+</body>
+</html>

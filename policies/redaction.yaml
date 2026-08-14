@@ -1,0 +1,9 @@
+patterns:
+  - ssn
+  - pan
+  - email
+  - phone
+  - bearer
+  - cookie
+  - account
+replacement: "«redacted:{kind}:{suffix}»"

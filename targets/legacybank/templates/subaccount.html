@@ -1,0 +1,40 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<style>
+body { margin:0; background:#d4d0c8; font-family: Tahoma, sans-serif; font-size:12px; {{ t.css_extra }} }
+.err { color:#c00; font-weight:bold; }
+</style>
+</head>
+<body>
+<table width="100%" cellpadding="6"><tr><td>
+<table border="1" bgcolor="#ffffff" cellpadding="6">
+  <tr bgcolor="{{ t.accent }}"><td colspan="2" style="color:#fff">Open Savings Sub-Account</td></tr>
+  {% if error %}<tr><td colspan="2"><span class="err">{{ error }}</span></td></tr>{% endif %}
+  <form method="post" action="/subaccount/new">
+  <input type="hidden" name="member_id" value="{{ member_id }}">
+  <tr>
+    <td>Nickname</td>
+    <td><input name="{{ fid('txtNick') }}" id="{{ fid('txtNick') }}"></td>
+  </tr>
+  <tr>
+    <td>Opening Amount</td>
+    <td><input name="{{ fid('txtAmt') }}" id="{{ fid('txtAmt') }}"></td>
+  </tr>
+  {% if t.require_product_code %}
+  <tr>
+    <td>Product Code</td>
+    <td>
+      <select name="{{ fid('cboProd') }}" id="{{ fid('cboProd') }}">
+        <option value="">-- select --</option>
+        <option value="SAV-01">SAV-01</option>
+      </select>
+    </td>
+  </tr>
+  {% endif %}
+  <tr><td></td><td><input type="submit" value="Submit"></td></tr>
+  </form>
+</table>
+</td></tr></table>
+</body>
+</html>

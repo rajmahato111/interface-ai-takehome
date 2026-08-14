@@ -1,0 +1,44 @@
+"""Thin Anthropic port. Temperature 0. Cassettes for CI."""
+
+from __future__ import annotations
+
+import os
+from typing import Any
+
+from handspan.llm.cassette import Cassette
+
+
+def decide(
+    *,
+    system: str,
+    user: str,
+    tools: list[dict[str, Any]],
+    cassette: Cassette | None = None,
+    live: bool = False,
+) -> dict[str, Any]:
+    if cassette is not None and not live:
+        return cassette.next_response()
+    if not live and cassette is None:
+        raise RuntimeError("no cassette and not --live")
+    api_key = os.environ.get("ANTHROPIC_API_KEY")
+    if not api_key:
+        raise RuntimeError("ANTHROPIC_API_KEY is not set")
+    import anthropic
+
+    client = anthropic.Anthropic(api_key=api_key)
+    resp = client.messages.create(
+        model=os.environ.get("ANTHROPIC_MODEL", "claude-sonnet-4-6"),
+        max_tokens=1024,
+        temperature=0,
+        system=system,
+        tools=tools,
+        messages=[{"role": "user", "content": user}],
+    )
+    for block in resp.content:
+        if getattr(block, "type", None) == "tool_use":
+            out = {"action": block.name, **dict(block.input)}
+            if cassette is not None:
+                cassette.append({"user": user[:2000]}, out)
+            return out
+    text = "".join(getattr(b, "text", "") or "" for b in resp.content)
+    return {"action": "finish", "status": "success", "rationale": text}
