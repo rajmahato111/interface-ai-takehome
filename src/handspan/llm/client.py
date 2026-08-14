@@ -3,9 +3,27 @@
 from __future__ import annotations
 
 import os
+from pathlib import Path
 from typing import Any
 
 from handspan.llm.cassette import Cassette
+
+
+def load_dotenv() -> None:
+    """Pull KEY=value lines from .env into os.environ if missing."""
+    candidates = [Path(".env"), Path(__file__).resolve().parents[3] / ".env"]
+    for path in candidates:
+        if not path.is_file():
+            continue
+        for raw in path.read_text().splitlines():
+            line = raw.strip()
+            if not line or line.startswith("#") or "=" not in line:
+                continue
+            key, _, value = line.partition("=")
+            key, value = key.strip(), value.strip().strip("'").strip('"')
+            if key and key not in os.environ:
+                os.environ[key] = value
+        break
 
 
 def decide(
@@ -20,6 +38,7 @@ def decide(
         return cassette.next_response()
     if not live and cassette is None:
         raise RuntimeError("no cassette and not --live")
+    load_dotenv()
     api_key = os.environ.get("ANTHROPIC_API_KEY")
     if not api_key:
         raise RuntimeError("ANTHROPIC_API_KEY is not set")

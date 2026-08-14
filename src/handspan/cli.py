@@ -10,7 +10,10 @@ from pathlib import Path
 import typer
 from rich import print
 
+from handspan.llm.client import load_dotenv
 from handspan.replay.loader import load
+
+load_dotenv()
 
 app = typer.Typer(no_args_is_help=True, add_completion=False)
 ARTDIR = Path("evidence/artifacts")
